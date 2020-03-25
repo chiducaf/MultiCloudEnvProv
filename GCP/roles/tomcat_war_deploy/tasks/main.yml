@@ -1,0 +1,7 @@
+---
+# tasks file for tomcat_war_deploy
+    - name: Make sure that we can connect to the machine
+      ping:
+
+    - name: copy war
+      copy: src=./TestSecApp.war dest=/opt/tomcat/webapps/TestSecApp.war owner=tomcat group=tomcat mode=0744

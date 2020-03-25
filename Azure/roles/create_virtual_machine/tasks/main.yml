@@ -1,0 +1,108 @@
+---
+# creates a virtual machine
+
+- name: call resource group if input is <new>
+  include_role:
+    name: create_resource_group
+
+- name: save generated resource group
+  set_fact:
+    resource_group_input: "{{ new_resource_group }}"
+    resource_name_suffix: "{{ new_resource_group[3:] }}"
+    guid_value: "{{ new_resource_group.split('_') | last  }}"   
+  when:
+    - resource_group == "<new>"
+
+- name: set variables if exist resource group used
+  set_fact:
+    resource_name_suffix: "{{ resource_group[3:] }}"
+    resource_group_input: "{{ resource_group }}"
+    guid_value: "{{ new_resource_group.split('_') | last  }}"   
+  when:
+    - resource_group != "<new>"
+
+- name: Create virtual machine
+  azure_rm_virtualmachine:
+    resource_group: "{{ resource_group_input }}"
+    virtual_network_resource_group: "{{ vnet_resource_group }}"
+    virtual_network_name: "{{ vnet_name }}"
+    subnet_name: "{{ subnet_name }}"
+    name: "vm{{ guid_value }}"
+    vm_size: "{{ vm_size }}"
+    admin_username: "{{ user_name }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/azureuser/.ssh/authorized_keys
+        key_data: "{{ ssh_key }}" #ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCv+iZs2E8p0j98x+9yTziqu0tpCcOU2w3vhRZ4B2KSUs0e/ixhkqBBR0XmVZz2rxeU0NiTIRgNNJmwCasxr+8T3YdmqICbmBZWuRrKa8d0sVQFyWkHSPukM3fNCRO9YnCUWmFCRBvb863N8Z8AgWrtf+4s7PAnsAeW5rJZ2CIL5FMjG/NcWW4mgNgmTYHnzxKSUatqFh278YIaBu7Wr3TymXz+bF5NOnWGEsXwRImMpkX8uliacgRBZGZJfVjjxFaMWqvDwvzE5qSsN5Hw0iNwRarT+XkIcnU2mfr2OFMJ1EoRy5ddppTLEqbtboOaFn9Bj4lsRaSwXqTg2lSImiX/ root@ansibletower
+#    admin_password: "{{ password }}" 
+#    network_interfaces: "nic_{{ resource_name_suffix  }}"
+    managed_disk_type: "{{ managed_disk_type }}"
+    os_type: "{{ os_type }}"
+    image:
+      offer: "{{ os_offer }}"
+      publisher: "{{ os_publisher }}"
+      sku: "{{ os_image_sku }}"
+      version: "latest"
+
+- name: get provisioned  vm name 
+  set_fact:
+    vm_name: "vm{{ guid_value }}" 
+    vm_ip_address: "{{ ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}"
+
+- name: add azure vm into host
+  add_host:
+    name: new_azure_vm
+    ansible_host: '{{ output.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}'
+    ansible_connection: ssh  # not guaranteed to have sshpass...
+    ansible_user: "{{ user_name }}"
+    #ansible_password: "{{ admin_password }}"
+    ansible_host_key_checking: false
+
+- name: wait for the ssh port to come online
+  wait_for:
+    port: 22
+    host: '{{ output.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}'
+    timeout: 60
+    
+- name: Git Clone
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ workspace }}"
+
+- name: build sample app
+  shell: mvn package chdir="{{ workspace }}"
+
+- block:
+  - name: Update repositories cache and install "tomcat8" package
+    become: true
+    apt:
+      name: tomcat8
+      update_cache: yes
+
+  - name: Install "tomcat8-admin" package
+    become: true
+    apt:
+      name: tomcat8-admin
+
+  - name: copy app to azure vm
+    become: true
+    copy:
+      src: "{{ workspace }}/target/demo-0.0.1-SNAPSHOT.war"
+      dest: /var/lib/tomcat8/webapps/hello.war
+      force: yes
+      mode: 0755
+
+  - name: Start and enable Tomcat service
+    become: true
+    systemd:
+      name: tomcat8
+      state: started
+      enabled: true
+      daemon_reload: true
+  delegate_to: new_azure_vm
+
+    
+    
+    
+    
+

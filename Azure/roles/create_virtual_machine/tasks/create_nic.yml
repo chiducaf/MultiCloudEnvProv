@@ -1,0 +1,8 @@
+-name: Create a network interface with private IP address only (no Public IP)
+ azure_rm_networkinterface:
+        name: nic001
+        resource_group: rg_tenant_dev
+        virtual_network_name: vnet_tenant_dev
+        security_group_name: mynsg
+        subnet_name: default
+        public_ip: no

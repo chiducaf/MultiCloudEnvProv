@@ -1,0 +1,18 @@
+---
+# create subnet
+# Input variables : vnet_resource_group , vnet , nsg , subnet , subnet_address_prefixes
+
+
+- name: create nsg
+  include_role:
+    name: create_network_security_group
+  when:
+    - nsg == "<new>"
+    
+  
+- name: add subnet
+  azure_rm_subnet:
+    resource_group: "{{ vnet_resource_group }}"
+    name: "{{ subnet }}"
+    address_prefix: "{{ subnet_address_prefixes}}"
+    virtual_network: "{{ vnet }}"

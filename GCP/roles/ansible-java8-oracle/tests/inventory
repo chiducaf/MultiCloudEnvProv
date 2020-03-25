@@ -1,0 +1,2 @@
+#192.168.175.221 ansible_user=azureuser
+192.168.175.220 ansible_user=root

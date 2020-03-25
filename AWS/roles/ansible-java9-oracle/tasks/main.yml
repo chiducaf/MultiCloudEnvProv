@@ -1,0 +1,6 @@
+---
+# tasks file for ansible-java8-oracle
+- name: install JDK 1.9
+  apt:
+    name: openjdk-9-jdk
+    state: present

@@ -1,0 +1,12 @@
+---
+# creates resource name suffix 
+
+- name: generate UUID
+  shell: uuidgen | cut -d- -f3
+  run_once: true
+  register: guid_value
+
+- name: store UUID and suffix in variable
+  set_fact:
+    resource_name_suffix:  "{{ resource_name_suffix  }}{{ (resource_name_suffix != '') | ternary('_','') }}{{ guid_value.stdout }}"
+  

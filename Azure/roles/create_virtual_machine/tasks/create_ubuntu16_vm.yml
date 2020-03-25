@@ -1,0 +1,23 @@
+ - hosts: localhost
+   vars:
+    location: local
+    resource_group: rg_tenant_dev
+    storage_account: vhdimages
+    network_interface: mynic
+   tasks:
+   - name: Create virtual machine
+     azure_rm_virtualmachine:
+      resource_group: "{{ resource_group }}"
+      name: testvm004
+      vm_size: Standard_D1_v2
+      storage_account: "{{ storage_account }}"
+      storage_container: testvm004
+      storage_blob: rhel7.vhd
+      admin_username: azureuser
+      admin_password: Password12345
+      network_interfaces: "{{ network_interface }}"
+      image:
+        offer: Redhat
+        publisher: Rhel
+        sku: '7.4'
+        version: latest

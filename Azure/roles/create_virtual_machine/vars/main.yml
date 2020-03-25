@@ -1,0 +1,18 @@
+---
+# vars file for create_virtual_machines
+    resource_group: <new>
+    region: centralus
+    vnet_resource_group: rgs2s
+    user_name: azureuser
+    #password: P@ssw0rd123$
+    vnet_name: s2svnet
+    subnet_name: default
+    managed_disk_type: Standard_LRS
+    repo_url: https://github.com/yungezz/helloworld.git
+    workspace: ~/src/helloworld
+    ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCx4CTlb5bgEzjd4MfygXxyx7XBSbnYzHgWyp3QtWcflVgORUHv7WCYx3O+FdilJYqeTTV+VnMnxaCNFc26woSUBJnOZ9D54NzvnZDDRgx3xe/FzxP6FtDqMencDsUBc/8KcqOYoXDCyw+V0szpo6/C8SJvOtG0tAUQuSaMGH9YTEeHEh5m9P87+nOBdeMNQKSHy+VA5QnXOKjiyS+ktNugUjMyeiQ9FdRub9LqTUlSh97vWrhiRyttIiVVCVMv5zTIIHUMFgMkmvK1Yzzb77oMvjcL6PsclYfvD5FNJLPGs7GGnkqqAlrOVMb6JhpTcdqVh6C0WG1TIEqNK4vS0CTh root@ansibletower
+    vm_size: Standard_D1
+    os_type: Windows
+    os_offer: WindowsServer
+    os_publisher: MicrosoftWindowsServer
+    os_image_sku: 2016-Datacenter

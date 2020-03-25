@@ -1,0 +1,6 @@
+---
+# tasks file for ansible-java8-oracle
+- name: install JDK 1.8
+  apt:
+    name: openjdk-8-jdk
+    state: present

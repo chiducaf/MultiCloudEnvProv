@@ -1,0 +1,147 @@
+- name: Create Azure VM
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  vars:
+    resource_group_vm: ansible_rg
+    resource_group_vnet: rgs2s
+    vnet_name: s2svnet
+    subnet_name: default
+    vm_name: myTesVM
+    location: Central US
+    #ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCx4CTlb5bgEzjd4MfygXxyx7XBSbnYzHgWyp3QtWcflVgORUHv7WCYx3O+FdilJYqeTTV+VnMnxaCNFc26woSUBJnOZ9D54NzvnZDDRgx3xe/FzxP6FtDqMencDsUBc/8KcqOYoXDCyw+V0szpo6/C8SJvOtG0tAUQuSaMGH9YTEeHEh5m9P87+nOBdeMNQKSHy+VA5QnXOKjiyS+ktNugUjMyeiQ9FdRub9LqTUlSh97vWrhiRyttIiVVCVMv5zTIIHUMFgMkmvK1Yzzb77oMvjcL6PsclYfvD5FNJLPGs7GGnkqqAlrOVMb6JhpTcdqVh6C0WG1TIEqNK4vS0CTh root@ansibletower
+    repo_url: https://github.com/yungezz/helloworld.git
+    workspace: ~/src/helloworld
+    ansible_port: 22
+    admin_username: azureuser
+    admin_password: Password@123
+#  roles:
+#    - azure.azure_preview_modules
+
+  tasks:
+
+    - name: Create a resource group for vnet
+      azure_rm_resourcegroup:
+          name: "{{ resource_group_vnet }}"
+          location: "{{ location }}"
+
+    #- name: Create virtual network
+     # azure_rm_virtualnetwork:
+      #  resource_group: "{{ resource_group_vnet }}"
+       # name: "{{ vnet_name }}"
+        #address_prefixes: "10.0.0.0/16"
+
+    #- name: Add subnet
+     # azure_rm_subnet:
+      #  resource_group: "{{ resource_group_vnet }}"
+       # name: "{{ subnet_name }}"
+        #address_prefix: "10.0.1.0/24"
+        #virtual_network: "{{ vnet_name }}"
+
+    - name: Create a resource group for vm
+      azure_rm_resourcegroup:
+          name: "{{ resource_group_vm }}"
+          location: "{{ location }}"
+
+    - name: Create Network Security Group that allows SSH
+      azure_rm_securitygroup:
+        resource_group: "{{ resource_group_vm }}"
+        name: "{{ vm_name }}"
+        rules:
+          - name: SSH
+            protocol: Tcp
+            destination_port_range: 22
+            access: Allow
+            priority: 1001
+            direction: Inbound
+            direction: Inbound
+          - name: Tomcat
+            protocol: Tcp
+            destination_port_range: 8080
+            access: Allow
+            priority: 1002
+            direction: Inbound
+
+    - name: Create VM
+      azure_rm_virtualmachine:
+        resource_group: "{{ resource_group_vm }}"
+        name: "{{ vm_name }}"
+        vm_size: Standard_DS1_v2
+        admin_username: "{{ admin_username }}"
+        admin_password: "{{ admin_password }}"
+        ssh_password_enabled: false
+        ssh_public_keys:
+          - path: /home/azureuser/.ssh/authorized_keys
+            key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCx4CTlb5bgEzjd4MfygXxyx7XBSbnYzHgWyp3QtWcflVgORUHv7WCYx3O+FdilJYqeTTV+VnMnxaCNFc26woSUBJnOZ9D54NzvnZDDRgx3xe/FzxP6FtDqMencDsUBc/8KcqOYoXDCyw+V0szpo6/C8SJvOtG0tAUQuSaMGH9YTEeHEh5m9P87+nOBdeMNQKSHy+VA5QnXOKjiyS+ktNugUjMyeiQ9FdRub9LqTUlSh97vWrhiRyttIiVVCVMv5zTIIHUMFgMkmvK1Yzzb77oMvjcL6PsclYfvD5FNJLPGs7GGnkqqAlrOVMb6JhpTcdqVh6C0WG1TIEqNK4vS0CTh root@ansibletower
+        virtual_network_resource_group: "{{ resource_group_vnet }}"
+        virtual_network_name: "{{ vnet_name }}"
+        subnet_name: "{{ subnet_name }}"
+        public_ip_allocation_method: Disabled
+        #network_interfaces: myNIC
+        image:
+          offer: UbuntuServer
+          publisher: Canonical
+          sku: 16.04-LTS
+          version: latest
+      register: output
+
+
+
+    - name: add azure vm into host
+      add_host:
+        name: new_azure_vm
+        groups: new_azure_vm
+        ansible_host: '{{ output.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}'
+        ansible_connection: ssh  # not guaranteed to have sshpass...
+        ansible_user: "{{ admin_username }}"
+        ansible_password: "{{ admin_password }}"
+        ansible_host_key_checking: false
+    
+
+        
+    
+    #- name: wait for the ssh port to come online
+      #wait_for:
+       # port: 22
+       # host: '{{ output.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.privateIPAddress }}'
+       # timeout: 50
+    - name: Wait for SSH to come up
+      wait_for:
+        port: 22
+        delay: 10
+        timeout: 60
+        state: started
+    - name: echo the hostname of the vm
+      shell: hostname
+    
+#- name: Configure instance(s)
+ # hosts: new_azure_vm
+  #become: True
+  #gather_facts: false
+  #remote_user: ubuntu
+  #roles:
+   # - tomcat_9
+   
+    - block:
+      - name: Update repositories cache and install "tomcat8" package
+        become: true
+        apt:
+          name: tomcat8
+          update_cache: yes
+
+      - name: Install "tomcat8-admin" package
+        become: true
+        apt:
+          name: tomcat8-admin
+
+      - name: Start and enable Tomcat service
+        become: true
+        systemd:
+          name: tomcat8
+          state: started
+          enabled: true
+          daemon_reload: true
+      delegate_to: new_azure_vm
+
+
+     

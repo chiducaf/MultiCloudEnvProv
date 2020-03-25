@@ -1,0 +1,15 @@
+---
+- name: Create GCP instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  remote_user: ubuntu
+  roles:
+    - gcp_create_instances
+
+- name: Configure instance(s)
+  hosts: new_instances
+  become: True
+  gather_facts: false
+  remote_user: ubuntu
+  roles:

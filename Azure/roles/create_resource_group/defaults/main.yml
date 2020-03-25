@@ -1,0 +1,9 @@
+---
+# defaults file for create_resource_group
+client_name: client
+project_name: project
+application_name: app
+environment_name: dev
+
+resource_group: "rg_{{ client_name }}_{{ project_name }}_{{ application_name }}_{{ environment_name }}"
+region: local

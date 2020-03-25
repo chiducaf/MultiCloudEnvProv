@@ -1,0 +1,10 @@
+---
+# vars file for gcp_create_instances
+gcp_project: ansible-terraform-269606-d7bbd8b9b6ec.json
+gcp_cred_kind: serviceaccount
+gcp_cred_file: /home/ubuntu/ansible-terraform-269606-d7bbd8b9b6ec.json
+source_image: projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts
+machine_type: n1-standard-1
+zone: us-central-a
+region: us-central
+

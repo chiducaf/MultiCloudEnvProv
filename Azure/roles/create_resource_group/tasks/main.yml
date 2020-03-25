@@ -1,0 +1,25 @@
+---
+# creates a resource group 
+
+- include_role:
+    name: create_resource_name_suffix
+
+- name: Create a resource group
+  azure_rm_resourcegroup:
+    name: "rg_{{ resource_name_suffix  }}"
+    location: "{{ region }}"
+#   subscription_id: 7b2c4b0d-0251-4463-abe8-4bf1fd892aa4
+#   client_id: 6a836f80-6f09-4102-895e-f71c3dc4e442
+#   secret: 4ct6zYzTXLTTgR/du0vPE0uErqW0qrPIsgxtw/JIXmg=
+#   tenant: 2d500702-a706-48a6-8583-ec231b03a113
+#   cloud_environment: https://management.local.azurestack.external
+#   cert_validation_mode: ignore
+
+    
+
+- name: store newly created resource group name in variable
+  set_fact:
+    new_resource_group: "rg_{{ resource_name_suffix  }}" 
+    new_resource_name_suffix: "{{ resource_name_suffix  }}"
+    ignore_errors: "{{ ansible_check_mode }}"
+

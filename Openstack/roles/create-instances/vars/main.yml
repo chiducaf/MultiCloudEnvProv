@@ -1,0 +1,22 @@
+---
+# vars file for osp.servers
+osp_servers:
+  default:
+    name: openstatcktestvm
+    state: present
+    image: Ubuntu16.04
+    key_name: mykey
+    flavor: m1.small
+    security_group: default
+    meta:
+      - { group: bulkymachines, deployment_name: DEV}
+
+ # app1:
+  #  name: tomcatserver
+  #  state: present
+  #  image: Ubuntu16.04
+  #  key_name: mykey
+  #  flavor: m1.small
+  #  security_group: default
+  #  meta:
+  #    - { group: bulkymachines, deployment_name: DEV}

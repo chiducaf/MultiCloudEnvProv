@@ -1,0 +1,11 @@
+---
+# vars file for aws_instance
+image: ami-0cfee17793b08a293
+subnet: subnet-042f26a5cde053e26
+zone: us-east-1a
+region: us-east-1
+keypair: aws-ec2-free-tier
+security_groups: sec-grp-dev-rdp-chn-arl
+instance_type: t2.micro
+name: ansible_vm
+count: 1

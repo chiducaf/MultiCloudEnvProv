@@ -1,0 +1,6 @@
+---
+# defaults file for create_resource_name_suffix
+client_name: ""
+project_name: ""
+application_name: ""
+environment_name: asdk_dev1

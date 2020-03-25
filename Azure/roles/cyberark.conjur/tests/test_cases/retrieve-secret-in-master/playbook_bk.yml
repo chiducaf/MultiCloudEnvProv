@@ -1,0 +1,8 @@
+---
+- name: Retrieve secret 
+  hosts: localhost
+  tasks:
+    - name: Retrieve secret 
+      vars:
+        super_secret_key: "{{lookup('retrieve_conjur_variable', 'ansible_authn_azs_sp/subscription_id')}}"
+      shell: echo "{{super_secret_key}}" > ./conjur_secrets.txt

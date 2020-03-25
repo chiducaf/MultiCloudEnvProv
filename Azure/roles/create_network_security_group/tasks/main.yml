@@ -1,0 +1,32 @@
+---
+# tasks file for create_network_security_group
+# Create a security group
+
+- name: create resource group if nsg_resource_group is <new>
+  include_role:
+    name: create_resource_group
+- name: save generated resource group
+  set_fact:
+    resource_group_input: "{{ new_resource_group }}"
+    resource_name_suffix: "{{ new_resource_group[3:] }}"
+  when:
+    - nsg_resource_group == "<new>"
+
+- azure_rm_securitygroup:
+      resource_group: "{{ resource_group_input }}"
+      name: "nsg_{{ new_resource_group[3:] }}"
+      rules:
+        - name: AllowAllInbound
+#         protocol: Tcp 
+#         destination_port_range: *
+          access: Allow
+          priority: 100
+          direction: Inbound
+
+        - name: DenyAllOutbound
+#         protocol: *
+#         source_port_range: *
+          access: Deny
+          priority: 200
+          direction: Outbound
+

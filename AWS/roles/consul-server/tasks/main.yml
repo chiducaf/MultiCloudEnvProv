@@ -1,0 +1,47 @@
+---
+# tasks file for consul-server
+
+   - name: Install unzip
+     apt: name=unzip state=present
+     become: true
+
+   - name: Install Consul
+     become: true
+     unarchive:
+       src: https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip
+       remote_src: yes
+       dest: /usr/local/bin
+       creates: /usr/local/bin/consul
+       mode: 0555
+
+   - name: Make Consul a service
+     become: true
+     copy:
+       src: consul.service
+       dest: /etc/systemd/system/consul.service
+
+   - name: Ensure config directory exists
+     become: true
+     file:
+       path: "{{ consul_config_dir }}"
+       state: directory
+
+   - name: Deploy consul server config
+     become: true
+     template:
+       src: server.init.json.j2
+       dest: "{{consul_config_dir}}/init.json"
+       
+  # - set_fact: consul_server={{ hostvars[inventory_hostname]['groups']['servers'][0] }}
+  # - set_fact: consul_server_ip={{ hostvars[consul_server]['ansible_all_ipv4_addresses'][0] }}
+
+  # - name: Deploy consul client config
+   #  become: true
+#     template:
+ #      src: client.init.json.j2
+  #     dest: "{{consul_config_dir}}/init.json"
+
+   
+   - name: Ensure consul's running
+     become: true
+     service: name=consul state=started

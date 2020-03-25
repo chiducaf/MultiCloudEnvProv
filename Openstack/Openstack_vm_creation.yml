@@ -1,0 +1,6 @@
+---
+- name: create instances
+  hosts: localhost
+  roles:
+    - role: create-instances
+    - role: ping

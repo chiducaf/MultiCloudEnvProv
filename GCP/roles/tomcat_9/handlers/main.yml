@@ -1,0 +1,6 @@
+---
+# handlers file for tomcat_9
+ - name: restart tomcat
+   sudo: yes
+   service: name=tomcat state=restarted
+

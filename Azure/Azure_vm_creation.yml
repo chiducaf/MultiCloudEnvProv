@@ -1,0 +1,12 @@
+---
+# Description
+# ===========
+# This playbook tests create_virtual_machine role
+- hosts: localhost 
+  roles:
+    - {role: create_virtual_machine, resource_group: <new>, vnet_resource_group: rgs2s, vnet_name: s2svnet, subnet_name: default }
+  tasks:
+    - name: display result 
+      debug: msg="Provisioned VM {{ vm_name }}"  
+
+

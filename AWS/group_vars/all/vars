@@ -1,0 +1,6 @@
+ansible_password: Syntbots123$
+aws_region: us-east-1
+aws_access_key_id: AKIAJT2U6PIFHB5VNJ3A
+aws_secret_access_key: 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
+security_group: sg-06f32c4f714014d63
+vpc_subnet_id: subnet-042f26a5cde053e26

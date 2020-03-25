@@ -1,0 +1,5 @@
+---
+# defaults file for create_subnet
+vnet_resource_group: "<new>"
+vnet: "<new>"
+subnet_address_prefixes: ""

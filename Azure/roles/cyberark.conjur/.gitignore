@@ -1,0 +1,13 @@
+*.log
+.cache
+*.retry
+.idea/
+*.pem
+*.pyc
+**/.molecule/
+**/__pycache__/
+**/test-files/output
+junit
+molecule/conjur.pem
+*.tmp
+vendor/

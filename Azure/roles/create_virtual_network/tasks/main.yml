@@ -1,0 +1,32 @@
+---
+# creates a virtual network
+
+- name: call resource group if input is <new>
+  include_role:
+    name: create_resource_group
+- name: save generated resource group
+  set_fact:
+    resource_group_input: "{{ new_resource_group }}"
+    resource_name_suffix: "{{ new_resource_group[3:] }}"
+  when:
+    - resource_group == "<new>"
+
+- name: set variables if exist resource group used
+  set_fact:
+    resource_name_suffix: "{{ resource_group[3:] }}"
+    resource_group_input: "{{ resource_group }}"
+  when:
+    - resource_group != "<new>"
+
+
+- name: create a virtual network
+  azure_rm_virtualnetwork:
+    resource_group: "{{ resource_group_input  }}"
+    name: "vnet_{{ resource_name_suffix  }}"
+    address_prefixes: "{{ vnet_address_prefixes  }}"
+
+- name: save newly created vnet name in vble
+  set_fact:
+    new_vnet: "vnet_{{ resource_name_suffix  }}"
+    resource_name_suffix_used: "{{ resource_name_suffix }}"
+

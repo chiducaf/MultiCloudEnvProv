@@ -1,0 +1,24 @@
+
+---
+# tasks file for create_network_security_group
+# Create a security group
+
+- name: create resource group if subnet_resource_group is <new> 
+- azure_rm_securitygroup:
+      resource_group: "{{ subnet_resource_group }}"
+      name: "nsg"
+      rules:
+          - name: AllowAllInbound
+            protocol: *
+            destination_port_range: *
+            access: Allow
+            priority: 100
+            direction: Inbound
+
+          - name: DenyAllOutbound
+            protocol: *
+            source_port_range: *
+            access: Deny
+            priority: 200
+            direction: Outbound
+

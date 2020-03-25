@@ -1,0 +1,36 @@
+---
+  - name: Provision an EC2 Instance
+    hosts: localhost
+    connection: local
+    gather_facts: False
+    remote_user: ubuntu
+    roles:
+      - aws_ec2_key_vm
+      
+  - name: Configure instance(s)
+    hosts: launched
+    become: True
+    gather_facts: false
+    remote_user: ubuntu
+    roles:
+      - python
+      - ansible-java8-oracle
+      - jenkins
+      - tomcat_9
+      - tomcat_war_deploy
+#      - consul-server
+      
+      
+ 
+      
+ # - name: Terminate instances
+  #  hosts: localhost
+   # tasks:
+    #  - name: Terminate instances that were previously launched
+     #   ec2:
+      #    state: 'absent'
+       #   instance_ids: '{{ ec2.instance_ids }}'
+      
+ 
+
+

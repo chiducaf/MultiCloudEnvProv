@@ -1,0 +1,4 @@
+---
+# defaults file for create_network_security_group
+nsg: "<new>"
+nsg_resource_group: "<new>"

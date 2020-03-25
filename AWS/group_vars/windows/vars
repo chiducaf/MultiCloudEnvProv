@@ -1,0 +1,6 @@
+ansible_user: Administrator
+#ansible_password: "{{ vault_ansible_password }}"
+ansible_password: Syntbots123$
+ansible_port: 5986
+ansible_connection: winrm
+ansible_winrm_server_cert_validation: ignore

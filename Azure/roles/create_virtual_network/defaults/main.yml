@@ -1,0 +1,4 @@
+---
+# defaults file for create_virtual_network
+resource_group: "<new>"
+vnet_address_prefixes: ""	
