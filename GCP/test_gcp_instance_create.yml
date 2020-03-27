@@ -12,5 +12,9 @@
   remote_user: ubuntu
   become: yes
   roles:
-    - 
+    - python
+    - ansible-java8-oracle
+    - jenkins
+    - tomcat_9
+    - tomcat_war_deploy
  
