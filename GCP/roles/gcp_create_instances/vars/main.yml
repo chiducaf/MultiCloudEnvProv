@@ -1,10 +1,10 @@
 ---
 # vars file for gcp_create_instances
-gcp_project: ansible-terraform-269606-d7bbd8b9b6ec.json
+gcp_project: synt-int-syntbots-devops-prd
 gcp_cred_kind: serviceaccount
-gcp_cred_file: /home/ubuntu/ansible-terraform-269606-d7bbd8b9b6ec.json
+gcp_cred_file: /home/ubuntu/synt-int-syntbots-devops-prd-28bc87a495c5.json
 source_image: projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts
 machine_type: n1-standard-1
-zone: us-central-a
-region: us-central
+zone: us-east1-b
+region: us-east1
 
