@@ -27,16 +27,16 @@
      
    - name: Create a Firewall
      gcp_compute_firewall:
-       name: ansible-firewall
-       network: "projects/{{ gcp_project }}/global/networks/{{ network.name }}"
-       allowed:
-       - ip_protocol: tcp
-         ports: ['80','22','443','8080']
-       source_ranges: ['0.0.0.0/0']
-       project: "{{ gcp_project }}"
-       auth_kind: serviceaccount
-       service_account_file: "{{ gcp_cred_file }}"
-       state: present
+         name: ansible-firewall
+         network: "projects/{{ gcp_project }}/global/networks/{{ network.name }}"
+         allowed:
+         - ip_protocol: tcp
+           ports: ['80','22','443','8080']
+         source_ranges: ['0.0.0.0/0']
+         project: "{{ gcp_project }}"
+         auth_kind: serviceaccount
+         service_account_file: "{{ gcp_cred_file }}"
+         state: present
      register: firewall
      
    - name: create a address
