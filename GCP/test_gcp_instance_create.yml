@@ -3,13 +3,13 @@
   hosts: localhost
   connection: local
   gather_facts: False
-  remote_user: ubuntu
+  remote_user: root
   roles:
     - gcp_create_instances
 
 - name: Manage new instances
   hosts: new_instances
-  remote_user: ubuntu
+  remote_user: root
   become: yes
   roles:
     - python
