@@ -3,14 +3,16 @@
   hosts: localhost
   connection: local
   gather_facts: False
-  remote_user: root
+  remote_user: ubuntu
   roles:
     - gcp_create_instances
 
 - name: Manage new instances
   hosts: new_instances
-  remote_user: root
+  remote_user: ubuntu
   become: yes
+  connection: ssh
+  sudo: True
   roles:
     - python
     - ansible-java8-oracle
