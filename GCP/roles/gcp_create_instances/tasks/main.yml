@@ -80,7 +80,7 @@
    - setup: # aka gather_facts
    
    - name: Wait for SSH to come up
-     wait_for: delay=1 host={{ address.address }} port=22 state=started  timeout=30    
+     wait_for: delay=1 host={{ address.address }} port=22 state=started  timeout=100    
    
    - name: Add host to groupname
      add_host: hostname={{ address.address }} groupname=new_instances
