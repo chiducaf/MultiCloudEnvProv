@@ -9,8 +9,9 @@
 
 - name: Manage new instances
   hosts: new_instances
+  become: true
+  gather_facts: false
   remote_user: ubuntu
-  become: yes
   connection: ssh
   roles:
     - python
