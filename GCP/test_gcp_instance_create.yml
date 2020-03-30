@@ -12,7 +12,6 @@
   remote_user: ubuntu
   become: yes
   connection: ssh
-  sudo: True
   roles:
     - python
     - ansible-java8-oracle
