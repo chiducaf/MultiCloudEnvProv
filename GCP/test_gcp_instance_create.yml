@@ -3,7 +3,7 @@
   hosts: localhost
   connection: local
   gather_facts: False
-  remote_user: ansible
+  remote_user: ubuntu
   roles:
     - gcp_create_instances
 
@@ -11,7 +11,7 @@
   hosts: new_instances
   become: true
   gather_facts: false
-  remote_user: ansible
+  remote_user: ubuntu
   connection: ssh
   roles:
     - python
