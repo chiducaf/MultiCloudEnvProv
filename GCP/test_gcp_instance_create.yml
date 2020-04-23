@@ -14,7 +14,7 @@
   remote_user: ubuntu
   connection: ssh
   roles:
-    - python
+    #- python
     - ansible-java8-oracle
     - jenkins
     - tomcat_9
