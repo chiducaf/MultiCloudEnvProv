@@ -12,7 +12,7 @@
   become: true
   gather_facts: false
   remote_user: ubuntu
-  connection: ssh
+  #connection: ssh
   roles:
     #- python
     - ansible-java8-oracle
